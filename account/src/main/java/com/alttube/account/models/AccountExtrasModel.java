@@ -4,25 +4,20 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Getter
 @Setter
-@ToString
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
-public class Account {
+public class AccountExtrasModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ID;
 
-    private String name;
-    private String email;
-    private String password;
-
     @Lob
     private String description;
-    private String myVideos;
+    private String[] myVideos;
     private String[] likedVideos;
     private String imageReference;
 }

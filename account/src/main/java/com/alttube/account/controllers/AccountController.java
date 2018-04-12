@@ -1,5 +1,8 @@
 package com.alttube.account.controllers;
 
+import com.alttube.account.models.AccountModel;
+import com.alttube.account.services.AccountService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,23 +12,39 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-public class Account {
+public class AccountController {
+
+    private final AccountService accountService;
+
+    @Autowired
+    public AccountController(AccountService accountService) {
+        this.accountService = accountService;
+    }
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     @RequestMapping(value = "/login",
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Account login(@Valid Account credentials) {
+    public AccountController login(@Valid AccountController credentials) {
         return null;
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)
-    @RequestMapping(value = "/update",
+    @RequestMapping(value = "/update_account",
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Account update(@Valid String ID) {
+    public AccountController update(@Valid String ID) {
         return null;
+    }
+
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @RequestMapping(value = "/create_account",
+            method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public void create(@Valid AccountModel accountModel) {
+        accountService.create(accountModel);
     }
 }
