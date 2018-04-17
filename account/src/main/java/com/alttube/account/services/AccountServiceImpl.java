@@ -30,4 +30,5 @@ public class AccountServiceImpl implements AccountService {
     public void create(AccountModel accountModel) {
         accountRepository.save(accountModel);
     }
+
 }

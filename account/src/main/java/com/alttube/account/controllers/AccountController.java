@@ -39,7 +39,7 @@ public class AccountController {
         return null;
     }
 
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/create_account",
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
