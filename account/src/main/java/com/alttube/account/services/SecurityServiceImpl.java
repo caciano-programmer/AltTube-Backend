@@ -6,9 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.io.UnsupportedEncodingException;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -33,7 +31,6 @@ public class SecurityServiceImpl implements SecurityService {
     @Override
     public String sendJwt(String email) {
         String jwt = null;
-
         try{
             Algorithm algorithm = Algorithm.HMAC512(secretKey);
             jwt = JWT.create()
@@ -41,9 +38,14 @@ public class SecurityServiceImpl implements SecurityService {
                     .withIssuedAt(new Date())
                     .withIssuer("Alt-Tube")
                     .sign(algorithm);
-        }catch (UnsupportedEncodingException x) {}
+        }catch (UnsupportedEncodingException x) { x.printStackTrace(); }
 
         return jwt;
+    }
+
+    @Override
+    public String randomTokenGenerator() {
+        return UUID.randomUUID().toString();
     }
 
     @Override

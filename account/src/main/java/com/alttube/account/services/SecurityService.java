@@ -8,6 +8,8 @@ public interface SecurityService {
 
     String sendJwt(String email);
 
+    String randomTokenGenerator();
+
     String hashPassword(String password);
 
     boolean passwordMatch(String password, String encodedPassword);

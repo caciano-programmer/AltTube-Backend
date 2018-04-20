@@ -7,20 +7,16 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @Entity
+@Table(name = "AccountExtras")
 public class AccountExtrasModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Account_ID")
-    private Long ID;
+    private Long Account_ID;
 
     @Lob
     private String description;
     private String[] myVideos;
     private String[] likedVideos;
-    private String imageReference;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @PrimaryKeyJoinColumn
-    private AccountModel account;
+    private byte[] imageReference;
 }
