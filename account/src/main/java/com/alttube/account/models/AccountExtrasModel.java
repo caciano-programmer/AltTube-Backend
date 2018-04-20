@@ -1,7 +1,6 @@
 package com.alttube.account.models;
 
 import lombok.*;
-
 import javax.persistence.*;
 
 @Setter
@@ -11,8 +10,8 @@ import javax.persistence.*;
 public class AccountExtrasModel {
 
     @Id
-    @Column(name = "Account_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Account_ID")
     private Long ID;
 
     @Lob
@@ -22,6 +21,6 @@ public class AccountExtrasModel {
     private String imageReference;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Account_ID")
+    @PrimaryKeyJoinColumn
     private AccountModel account;
 }

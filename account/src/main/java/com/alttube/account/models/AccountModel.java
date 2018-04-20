@@ -4,12 +4,13 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Getter
-@Setter
+
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name = "Account", indexes = { @Index(columnList = "Email") })
+@Getter
+@Setter
+@Table(name = "Account")
 public class AccountModel {
 
     @Id
@@ -17,7 +18,7 @@ public class AccountModel {
     @Column(name = "Account_ID")
     private Long Account_ID;
 
-    @Column(name = "Name", nullable = false)
+    @Column(name = "Name", nullable = false, updatable = false)
     private String name;
 
     @Column(name = "Email", nullable = false, unique = true, updatable = false)
@@ -26,14 +27,14 @@ public class AccountModel {
     @Column(name = "Password", nullable = false, updatable = false)
     private String password;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "account")
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private AccountExtrasModel accountExtras;
 
-    public AccountModel(String name, String email, String password, AccountExtrasModel accountExtras) {
-        this.name = name;
+    public AccountModel(String name) { this.name = name; }
+
+    public AccountModel(String email, String password) {
         this.email = email;
         this.password = password;
-        this.accountExtras = accountExtras;
     }
 
     public AccountModel(String name, String email, String password) {

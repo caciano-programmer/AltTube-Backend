@@ -3,6 +3,8 @@ spring:
     active: dev
   jpa:
     database: mysql
+Account:
+  SecretKey: ThisIsASecretKeyValue
 
 ---
 spring:
