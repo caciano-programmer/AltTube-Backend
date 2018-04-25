@@ -1,9 +1,7 @@
 package com.alttube.account.models;
 
 import lombok.*;
-
 import javax.persistence.*;
-
 
 @ToString
 @NoArgsConstructor

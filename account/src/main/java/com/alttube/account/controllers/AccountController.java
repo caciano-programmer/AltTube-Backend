@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.Optional;
 
 @RestController
 public class AccountController {
@@ -57,11 +58,11 @@ public class AccountController {
     @RequestMapping(value = "/update_account",
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public void update(@Valid AccountExtrasModel model, @RequestHeader("token") String token, HttpServletRequest request) {
+    public void update(@Valid AccountExtrasModel extrasModel, @RequestHeader("token") String token, HttpServletRequest request) {
         HashMap<String, String> map = cookieService.cookieValue(request.getCookies());
-        accountService.authenticate(token, map.get("token"), map.get("jwt"));
-        String email = map.get("email");
-        accountService.update(model, email);
+
+        Optional<AccountModel> accountModel = accountService.authenticate(token, map.get("token"), map.get("jwt"));
+        accountService.update(accountModel.get(), extrasModel);
     }
 
     @ResponseStatus(HttpStatus.CREATED)

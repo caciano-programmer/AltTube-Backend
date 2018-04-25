@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -37,7 +38,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean authenticate(String tokenHeader, String tokenCookie, String jwt) {
+    public Optional<AccountModel> authenticate(String tokenHeader, String tokenCookie, String jwt) {
         String jwtClaim = null;
 
         try {
@@ -52,12 +53,14 @@ public class AccountServiceImpl implements AccountService {
             jwtClaim = claim.asString();
         } catch (UnsupportedEncodingException | JWTVerificationException x) { x.printStackTrace(); }
 
-        return tokenHeader.equals(tokenCookie) && accountRepository.existsByEmail(jwtClaim);
+        if(!tokenHeader.equals(tokenCookie))
+            return Optional.empty();
+        return Optional.of(accountRepository.findByEmail(jwtClaim));
     }
 
     @Override
-    public void update(AccountExtrasModel model, String email) {
-        accountRepository.save(accountRepository.findByEmail(email).addExtras(model));
+    public void update(AccountModel model, AccountExtrasModel accountExtrasModel) {
+        accountRepository.save(model.addExtras(accountExtrasModel));
     }
 
     @Override

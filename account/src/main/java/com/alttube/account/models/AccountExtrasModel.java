@@ -6,6 +6,7 @@ import javax.persistence.*;
 @Setter
 @Getter
 @NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "AccountExtras")
 public class AccountExtrasModel {
@@ -18,5 +19,5 @@ public class AccountExtrasModel {
     private String description;
     private String[] myVideos;
     private String[] likedVideos;
-    private byte[] imageReference;
+    private String imageReference;
 }
