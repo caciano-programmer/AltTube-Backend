@@ -39,8 +39,6 @@ public class CookieServiceImpl implements CookieService {
                 map.put("token", cookie.getValue());
             else if(cookie.getName().equals("jwt"))
                 map.put("jwt", cookie.getValue());
-            else if(cookie.getName().equals("email"))
-                map.put("email", cookie.getValue());
         }
         return map;
     }

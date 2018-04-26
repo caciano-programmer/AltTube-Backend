@@ -24,11 +24,12 @@ public class AccountModel {
     @Column(nullable = false, updatable = false)
     private String password;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "accountModel", orphanRemoval = true)
     private AccountExtrasModel accountExtras;
 
     public AccountModel addExtras(AccountExtrasModel accountExtrasModel) {
         this.setAccountExtras(accountExtrasModel);
+        accountExtrasModel.setAccountModel(this);
         return this;
     }
 }

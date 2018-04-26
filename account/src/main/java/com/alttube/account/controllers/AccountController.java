@@ -37,14 +37,8 @@ public class AccountController {
         HashMap<String, String> loginInfo = securityService.getCredentialsFromHeader(credentials);
         String email = loginInfo.get("email");
         String password = loginInfo.get("password");
-        String uuid = securityService.randomTokenGenerator();
-        String jwt = securityService.sendJwt(email);
-
         accountService.login(email, password);
-        response.addCookie(cookieService.getCookie("jwt", jwt));
-        response.addCookie(cookieService.getCookie("token", uuid));
-        response.addCookie(cookieService.getCookie("email", email));
-        response.addHeader("token", uuid);
+        addCookieAndToken(response, email);
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -60,7 +54,6 @@ public class AccountController {
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public void update(@Valid AccountExtrasModel extrasModel, @RequestHeader("token") String token, HttpServletRequest request) {
         HashMap<String, String> map = cookieService.cookieValue(request.getCookies());
-
         Optional<AccountModel> accountModel = accountService.authenticate(token, map.get("token"), map.get("jwt"));
         accountService.update(accountModel.get(), extrasModel);
     }
@@ -70,7 +63,21 @@ public class AccountController {
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public void create(@Valid AccountModel accountModel) {
+    public void create(@Valid AccountModel accountModel, @RequestHeader("Authorization") String credentials, HttpServletResponse response) {
+        HashMap<String, String> loginInfo = securityService.getCredentialsFromHeader(credentials);
+        String email = loginInfo.get("email");
+        String password = loginInfo.get("password");
+        accountModel.setEmail(email);
+        accountModel.setPassword(password);
         accountService.create(accountModel);
+        addCookieAndToken(response, email);
+    }
+
+    private void addCookieAndToken(HttpServletResponse response, String email) {
+        String uuid = securityService.randomTokenGenerator();
+        String jwt = securityService.sendJwt(email);
+        response.addCookie(cookieService.getCookie("jwt", jwt));
+        response.addCookie(cookieService.getCookie("token", uuid));
+        response.addHeader("token", uuid);
     }
 }

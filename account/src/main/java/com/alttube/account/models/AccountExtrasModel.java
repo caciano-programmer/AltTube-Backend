@@ -15,6 +15,10 @@ public class AccountExtrasModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Account_ID;
 
+    @OneToOne
+    @MapsId
+    private AccountModel accountModel;
+
     @Lob
     private String description;
     private String[] myVideos;

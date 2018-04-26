@@ -12,6 +12,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.Optional;
@@ -59,8 +60,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void update(AccountModel model, AccountExtrasModel accountExtrasModel) {
-        accountRepository.save(model.addExtras(accountExtrasModel));
+    public void update(AccountModel model, AccountExtrasModel extrasModel) {
+        accountRepository.save(model.addExtras(extrasModel));
     }
 
     @Override
