@@ -1,6 +1,10 @@
 package com.alttube.account.models;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.persistence.*;
 
 @Setter
@@ -13,7 +17,7 @@ public class AccountExtrasModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Account_ID;
+    private Long ID;
 
     @OneToOne
     @MapsId

@@ -61,7 +61,10 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void update(AccountModel model, AccountExtrasModel extrasModel) {
-        accountRepository.save(model.addExtras(extrasModel));
+        if(model.getAccountExtras() == null)
+            accountRepository.save(model.addExtras(extrasModel));
+        else
+            accountRepository.save(model.setExtras(extrasModel));
     }
 
     @Override

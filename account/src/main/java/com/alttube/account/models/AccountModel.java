@@ -1,6 +1,10 @@
 package com.alttube.account.models;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.persistence.*;
 
 @ToString
@@ -24,12 +28,20 @@ public class AccountModel {
     @Column(nullable = false, updatable = false)
     private String password;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "accountModel", orphanRemoval = true)
+    @OneToOne(mappedBy = "accountModel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private AccountExtrasModel accountExtras;
 
     public AccountModel addExtras(AccountExtrasModel accountExtrasModel) {
-        this.setAccountExtras(accountExtrasModel);
         accountExtrasModel.setAccountModel(this);
+        this.setAccountExtras(accountExtrasModel);
+        return this;
+    }
+
+    public AccountModel setExtras(AccountExtrasModel accountExtrasModel) {
+        if(accountExtrasModel.getDescription() != null) this.accountExtras.setDescription(accountExtrasModel.getDescription());
+        if(accountExtrasModel.getMyVideos() != null) this.accountExtras.setMyVideos(accountExtrasModel.getMyVideos());
+        if(accountExtrasModel.getLikedVideos() != null) this.accountExtras.setLikedVideos(accountExtrasModel.getLikedVideos());
+        if(accountExtrasModel.getImageReference() != null) this.accountExtras.setImageReference(accountExtrasModel.getImageReference());
         return this;
     }
 }
