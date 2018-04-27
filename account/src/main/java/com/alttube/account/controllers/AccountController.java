@@ -30,7 +30,7 @@ public class AccountController {
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)
-    @RequestMapping(value = "/login",
+    @RequestMapping(value = "/account/login",
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public void login(@Valid @RequestHeader("Authorization") String credentials, HttpServletResponse response) {
@@ -42,14 +42,14 @@ public class AccountController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @RequestMapping(value = "/logout",
+    @RequestMapping(value = "/account/logout",
             method = RequestMethod.GET)
     public void logout(@Valid HttpServletResponse response){
         cookieService.deleteCookie(response);
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)
-    @RequestMapping(value = "/update_account",
+    @RequestMapping(value = "/account/update_account",
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public void update(@Valid AccountExtrasModel extrasModel, @RequestHeader("token") String token, HttpServletRequest request) {
@@ -59,7 +59,7 @@ public class AccountController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(value = "/create_account",
+    @RequestMapping(value = "/account/create_account",
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

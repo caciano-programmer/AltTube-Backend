@@ -24,18 +24,21 @@ public class AccountServiceImpl implements AccountService {
     private String secret;
     private final AccountRepository accountRepository;
     private final SecurityService securityService;
+    private final ExceptionService exceptionService;
 
     @Autowired
-    public AccountServiceImpl(AccountRepository accountRepository, SecurityService securityService) {
+    public AccountServiceImpl(AccountRepository accountRepository, SecurityService securityService, ExceptionService exceptionService) {
         this.accountRepository = accountRepository;
         this.securityService = securityService;
+        this.exceptionService = exceptionService;
     }
 
     @Override
-    public String login(String email, String pass) {
+    public void login(String email, String pass) {
         AccountModel account = accountRepository.findByEmail(email);
-        securityService.passwordMatch(pass, account.getPassword());
-        return null;
+        if(account == null) exceptionService.throwEmailNonExistentException(email);
+        boolean validPassword = securityService.passwordMatch(pass, account.getPassword());
+        if(!validPassword) exceptionService.throwInvalidPasswordException();
     }
 
     @Override

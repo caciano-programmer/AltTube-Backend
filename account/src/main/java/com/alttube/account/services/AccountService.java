@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface AccountService {
 
-    String login(String email, String password);
+    void login(String email, String password);
 
     Optional<AccountModel> authenticate(String tokenHeader, String tokenCookie, String jwt);
 
