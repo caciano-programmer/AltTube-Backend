@@ -41,7 +41,6 @@ public class AccountModel {
         if(accountExtrasModel.getDescription() != null) this.accountExtras.setDescription(accountExtrasModel.getDescription());
         if(accountExtrasModel.getMyVideos() != null) this.accountExtras.setMyVideos(accountExtrasModel.getMyVideos());
         if(accountExtrasModel.getLikedVideos() != null) this.accountExtras.setLikedVideos(accountExtrasModel.getLikedVideos());
-        if(accountExtrasModel.getImageReference() != null) this.accountExtras.setImageReference(accountExtrasModel.getImageReference());
         return this;
     }
 }

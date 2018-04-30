@@ -27,5 +27,7 @@ public class AccountExtrasModel {
     private String description;
     private String[] myVideos;
     private String[] likedVideos;
-    private String imageReference;
+
+    @Transient
+    private byte[] image;
 }

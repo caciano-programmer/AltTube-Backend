@@ -1,6 +1,7 @@
 package com.alttube.account.controllers;
 
 import com.alttube.account.exceptions.EmailNonExistent;
+import com.alttube.account.exceptions.InvalidCredentialsFormat;
 import com.alttube.account.exceptions.InvalidPassword;
 import com.alttube.account.services.ExceptionResponseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class AccountControllerAdvice {
         this.exceptionResponseService = exceptionResponseService;
     }
 
-    @ExceptionHandler({EmailNonExistent.class, InvalidPassword.class})
+    @ExceptionHandler({EmailNonExistent.class, InvalidPassword.class, InvalidCredentialsFormat.class})
     public ResponseEntity<ExceptionResponseService> resourceNotFound(RuntimeException ex) {
         this.exceptionResponseService.setCode("Not Found.");
         this.exceptionResponseService.setDate(new Date());
