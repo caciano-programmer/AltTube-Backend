@@ -1,6 +1,9 @@
 package com.alttube.account.services;
 
+import com.alttube.account.models.AccountModel;
+
 import java.util.HashMap;
+import java.util.Optional;
 
 public interface SecurityService {
 
@@ -13,4 +16,6 @@ public interface SecurityService {
     String hashPassword(String password);
 
     boolean passwordMatch(String password, String encodedPassword);
+
+    Optional<AccountModel> authenticate(String tokenHeader, String tokenCookie, String jwt);
 }

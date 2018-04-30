@@ -7,4 +7,6 @@ public interface ExceptionService {
     void throwInvalidPasswordException();
 
     void throwInvalidCredentialsFormatException();
+
+    void throwInvalidImage();
 }

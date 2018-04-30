@@ -1,8 +1,14 @@
 package com.alttube.account.services;
 
+import com.alttube.account.models.AccountModel;
+import com.alttube.account.repositories.AccountRepository;
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,16 +23,40 @@ public class SecurityServiceImpl implements SecurityService {
     @Value("${Account.SecretKey}")
     private String secretKey;
     private final ExceptionService exceptionService;
+    private final AccountRepository accountRepository;
 
     @Autowired
-    public SecurityServiceImpl(ExceptionService exceptionService) { this.exceptionService = exceptionService; }
+    public SecurityServiceImpl(ExceptionService exceptionService, AccountRepository accountRepository) {
+        this.exceptionService = exceptionService;
+        this.accountRepository = accountRepository;
+    }
+
+    @Override
+    public Optional<AccountModel> authenticate(String tokenHeader, String tokenCookie, String jwt) {
+        String jwtClaim = null;
+
+        try {
+            Algorithm algorithm = Algorithm.HMAC512(secretKey);
+            JWTVerifier jwtVerifier = JWT.require(algorithm)
+                    .withIssuer("Alt-Tube")
+                    .acceptLeeway(3600)
+                    .build();
+            DecodedJWT decodedJWT = jwtVerifier.verify(jwt);
+            Map<String, Claim> claims = decodedJWT.getClaims();
+            Claim claim = claims.get("email");
+            jwtClaim = claim.asString();
+        } catch (UnsupportedEncodingException | JWTVerificationException x) { x.printStackTrace(); }
+
+        if(!tokenHeader.equals(tokenCookie)) exceptionService.throwInvalidCredentialsFormatException();
+        return Optional.of(accountRepository.findByEmail(jwtClaim));
+    }
 
     @Override
     public HashMap<String, String> getCredentialsFromHeader(String token) {
         String[] split = token.split(" ");
         String type = split[0];
         String decodedCredentials = decode(split[1]);
-        
+
 
         String[] cred = decodedCredentials.split(":", 2);
         HashMap<String,String> credentials = new HashMap<>(2);

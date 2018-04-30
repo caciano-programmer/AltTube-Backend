@@ -2,6 +2,7 @@ package com.alttube.account.services;
 
 import com.alttube.account.exceptions.EmailNonExistent;
 import com.alttube.account.exceptions.InvalidCredentialsFormat;
+import com.alttube.account.exceptions.InvalidImageUpload;
 import com.alttube.account.exceptions.InvalidPassword;
 import org.springframework.stereotype.Service;
 
@@ -16,4 +17,7 @@ public class ExceptionServiceImpl implements ExceptionService {
 
     @Override
     public void throwInvalidCredentialsFormatException() { throw new InvalidCredentialsFormat(); }
+
+    @Override
+    public void throwInvalidImage() { throw new InvalidImageUpload(); }
 }

@@ -39,8 +39,8 @@ public class AccountModel {
 
     public AccountModel setExtras(AccountExtrasModel accountExtrasModel) {
         if(accountExtrasModel.getDescription() != null) this.accountExtras.setDescription(accountExtrasModel.getDescription());
-        if(accountExtrasModel.getMyVideos() != null) this.accountExtras.setMyVideos(accountExtrasModel.getMyVideos());
-        if(accountExtrasModel.getLikedVideos() != null) this.accountExtras.setLikedVideos(accountExtrasModel.getLikedVideos());
+        if(accountExtrasModel.getAge() != null) this.accountExtras.setAge(accountExtrasModel.getAge());
+        if(accountExtrasModel.getGender() != null) this.accountExtras.setGender(accountExtrasModel.getGender());
         return this;
     }
 }

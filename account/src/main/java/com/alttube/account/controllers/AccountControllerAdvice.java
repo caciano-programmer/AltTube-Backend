@@ -2,6 +2,7 @@ package com.alttube.account.controllers;
 
 import com.alttube.account.exceptions.EmailNonExistent;
 import com.alttube.account.exceptions.InvalidCredentialsFormat;
+import com.alttube.account.exceptions.InvalidImageUpload;
 import com.alttube.account.exceptions.InvalidPassword;
 import com.alttube.account.services.ExceptionResponseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +29,13 @@ public class AccountControllerAdvice {
         this.exceptionResponseService.setDate(new Date());
         this.exceptionResponseService.setMessage(ex.getMessage());
         return new ResponseEntity<>(this.exceptionResponseService, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({InvalidImageUpload.class})
+    public ResponseEntity<ExceptionResponseService> invalidUploadFormat(RuntimeException ex) {
+        this.exceptionResponseService.setCode("Invalid image format");
+        this.exceptionResponseService.setDate(new Date());
+        this.exceptionResponseService.setMessage(ex.getMessage());
+        return new ResponseEntity<>(this.exceptionResponseService, HttpStatus.CONFLICT);
     }
 }

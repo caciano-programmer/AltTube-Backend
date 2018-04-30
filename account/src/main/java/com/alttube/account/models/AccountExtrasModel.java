@@ -25,9 +25,7 @@ public class AccountExtrasModel {
 
     @Lob
     private String description;
-    private String[] myVideos;
-    private String[] likedVideos;
-
-    @Transient
-    private byte[] image;
+    private String gender;
+    private Integer age;
+    private String imageName;
 }

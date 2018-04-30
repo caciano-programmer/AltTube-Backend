@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -51,10 +53,13 @@ public class AccountController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @RequestMapping(value = "/account/update_account",
             method = RequestMethod.POST,
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public void update(@Valid AccountExtrasModel extrasModel, @RequestHeader("token") String token, HttpServletRequest request) {
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void update(@Valid AccountExtrasModel extrasModel, @RequestHeader("token") String token,
+                       @RequestParam(required = false) MultipartFile file, HttpServletRequest request) {
         HashMap<String, String> map = cookieService.cookieValue(request.getCookies());
-        Optional<AccountModel> accountModel = accountService.authenticate(token, map.get("token"), map.get("jwt"));
+        Optional<AccountModel> accountModel = securityService.authenticate(token, map.get("token"), map.get("jwt"));
+        if(file != null && !file.isEmpty()) accountService.saveImage(file, extrasModel);
+
         accountService.update(accountModel.get(), extrasModel);
     }
 
