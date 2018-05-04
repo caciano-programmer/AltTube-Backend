@@ -4,9 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.Transient;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -15,14 +13,11 @@ import java.util.Date;
 @Setter
 @ToString
 @NoArgsConstructor
-@Document
 public class Reply {
 
-    @Id
-    private String id;
-
     @NotNull
-    private String parentId;
+    @Transient
+    private String commentRef;
 
     @NotNull
     private String author;
@@ -30,6 +25,5 @@ public class Reply {
     @NotNull
     private String text;
 
-    @CreatedDate
-    private Date timestamp;
+    private final Date timestamp = new Date();
 }

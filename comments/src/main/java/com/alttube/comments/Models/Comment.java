@@ -4,11 +4,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,13 +31,7 @@ public class Comment {
     @NotNull
     private String videoRef;
 
-    @CreatedDate
-    private Date timestamp;
+    private final List<Reply> replies = new ArrayList<>();
 
-    private List<Reply> replies;
-
-    public Comment addReply(Reply comment) {
-        this.replies.add(comment);
-        return this;
-    }
+    private final Date timestamp = new Date();
 }
