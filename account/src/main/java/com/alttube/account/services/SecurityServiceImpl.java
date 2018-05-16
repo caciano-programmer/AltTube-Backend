@@ -33,22 +33,14 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public Optional<AccountModel> authenticate(String tokenHeader, String tokenCookie, String jwt) {
-        String jwtClaim = null;
+        Optional<String> email = authenticateHelper(tokenHeader, tokenCookie, jwt);
+        return email.isPresent() ? Optional.of(accountRepository.findByEmail(email.get())) : Optional.empty();
+    }
 
-        try {
-            Algorithm algorithm = Algorithm.HMAC512(secretKey);
-            JWTVerifier jwtVerifier = JWT.require(algorithm)
-                    .withIssuer("Alt-Tube")
-                    .acceptLeeway(3600)
-                    .build();
-            DecodedJWT decodedJWT = jwtVerifier.verify(jwt);
-            Map<String, Claim> claims = decodedJWT.getClaims();
-            Claim claim = claims.get("email");
-            jwtClaim = claim.asString();
-        } catch (UnsupportedEncodingException | JWTVerificationException x) { x.printStackTrace(); }
-
-        if(!tokenHeader.equals(tokenCookie)) exceptionService.throwInvalidCredentialsFormatException();
-        return Optional.of(accountRepository.findByEmail(jwtClaim));
+    @Override
+    public boolean isAuthenticated(String tokenHeader, String tokenCookie, String jwt) {
+        Optional<String> email = authenticateHelper(tokenHeader, tokenCookie, jwt);
+        return email.isPresent() ? accountRepository.existsByEmail(email.get()) : false;
     }
 
     @Override
@@ -94,6 +86,26 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public boolean passwordMatch(String password, String encoded) { return new BCryptPasswordEncoder().matches(password, encoded); }
+
+    private Optional<String> authenticateHelper(String tokenHeader, String tokenCookie, String jwt) {
+
+        if(!tokenHeader.equals(tokenCookie)) exceptionService.throwInvalidCredentialsFormatException();
+        Optional<String> jwtClaim = Optional.empty();
+
+        try {
+            Algorithm algorithm = Algorithm.HMAC512(secretKey);
+            JWTVerifier jwtVerifier = JWT.require(algorithm)
+                    .withIssuer("Alt-Tube")
+                    .acceptLeeway(3600)
+                    .build();
+            DecodedJWT decodedJWT = jwtVerifier.verify(jwt);
+            Map<String, Claim> claims = decodedJWT.getClaims();
+            Claim claim = claims.get("email");
+            jwtClaim = Optional.of(claim.asString());
+        } catch(UnsupportedEncodingException | JWTVerificationException x) { x.printStackTrace(); }
+
+        return jwtClaim;
+    }
 
     private String decode(String credentials) {
         byte[] bytes = Base64.getDecoder().decode(credentials);

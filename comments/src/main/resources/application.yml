@@ -4,3 +4,7 @@ spring:
       port: 27017
       host: localhost
       database: Comments
+  activemq:
+    broker-url: tcp://localhost:61616
+    user: admin
+    password: admin

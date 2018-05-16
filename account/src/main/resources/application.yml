@@ -3,8 +3,14 @@ spring:
     active: dev
   jpa:
     database: mysql
+  activemq:
+      broker-url: tcp://localhost:61616
+      user: admin
+      password: admin
 Account:
   SecretKey: ThisIsASecretKeyValue
+server:
+  port: 8089
 
 ---
 spring:

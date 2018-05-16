@@ -18,4 +18,6 @@ public interface SecurityService {
     boolean passwordMatch(String password, String encodedPassword);
 
     Optional<AccountModel> authenticate(String tokenHeader, String tokenCookie, String jwt);
+
+    boolean isAuthenticated(String tokenHeader, String tokenCookie, String jwt);
 }
