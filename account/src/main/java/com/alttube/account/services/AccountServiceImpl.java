@@ -60,7 +60,6 @@ public class AccountServiceImpl implements AccountService {
                 file.delete();
                 exceptionService.throwInvalidImage();
             }
-            System.out.println(file.length());
             extrasModel.setImageName(multipartFile.getOriginalFilename());
         } catch (IOException ex) { ex.printStackTrace(); }
     }
