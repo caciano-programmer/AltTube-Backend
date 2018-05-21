@@ -1,0 +1,24 @@
+spring:
+  profiles:
+    active: dev
+  jpa:
+    database: mysql
+  activemq:
+      broker-url: tcp://localhost:61616
+      user: admin
+      password: admin
+
+---
+spring:
+  profiles: dev
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+
+---
+spring:
+  profiles: prod
+  jpa:
+    hibernate:
+      ddl-auto: validate

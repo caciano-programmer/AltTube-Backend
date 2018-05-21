@@ -60,7 +60,7 @@ public class CommentController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @GetMapping(value = "/video/{id}")
+    @GetMapping(value = "/video/comment/{id}")
     public Flux<Comment> getComments(@PathVariable String id) {
         return commentRepository.findTop15ByVideoRefOrderByTimestamp(id);
     }
