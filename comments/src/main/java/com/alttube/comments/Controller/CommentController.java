@@ -11,6 +11,8 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import javax.jms.JMSException;
 import javax.validation.Valid;
 
 @RestController
@@ -34,12 +36,7 @@ public class CommentController {
                                   @CookieValue(name = "jwt", defaultValue = "Empty") String jwt,
                                   @CookieValue(name = "token", defaultValue = "Empty") String cookieToken) {
 
-        String credentials = headerToken + " " + cookieToken + " " + jwt;
-        ActiveMQTextMessage msg = (ActiveMQTextMessage)jmsTemplate.sendAndReceive(
-                "CommentAuthentication", session -> session.createTextMessage(credentials) );
-        try {
-            if(!msg.getText().equals("Authenticated")) throw new RuntimeException(msg.getText());
-        } catch (Exception ex) { ex.printStackTrace(); }
+        authenticateCredentials(headerToken, cookieToken, jwt);
         return commentRepository.insert(comment).then();
     }
 
@@ -49,13 +46,7 @@ public class CommentController {
                                 @RequestHeader(name = "token", defaultValue = "Empty") String headerToken,
                                 @CookieValue(name = "jwt", defaultValue = "Empty") String jwt,
                                 @CookieValue(name = "token", defaultValue = "Empty") String cookieToken) {
-
-        String credentials = headerToken + " " + cookieToken + " " + jwt;
-        ActiveMQTextMessage msg = (ActiveMQTextMessage)jmsTemplate.sendAndReceive(
-                "CommentAuthentication", session -> session.createTextMessage(credentials) );
-        try {
-            if(!msg.getText().equals("Authenticated")) throw new RuntimeException(msg.getText());
-        } catch (Exception ex) { ex.printStackTrace(); }
+        authenticateCredentials(headerToken, cookieToken, jwt);
         return advancedQuery.addReply(reply.getCommentRef(), reply).then();
     }
 
@@ -63,5 +54,14 @@ public class CommentController {
     @GetMapping(value = "/video/comment/{id}")
     public Flux<Comment> getComments(@PathVariable String id) {
         return commentRepository.findTop15ByVideoRefOrderByTimestamp(id);
+    }
+
+    private void authenticateCredentials(String headerToken, String cookieToken, String jwt) {
+        String credentials = headerToken + " " + cookieToken + " " + jwt;
+        ActiveMQTextMessage msg = (ActiveMQTextMessage)jmsTemplate.sendAndReceive(
+                "CommentAuthentication", session -> session.createTextMessage(credentials) );
+        try {
+            if(!msg.getText().equals("Authenticated")) throw new RuntimeException(msg.getText());
+        } catch (JMSException ex) { throw new RuntimeException("Server Error!, ApacheMQ failure, please contact administrator"); }
     }
 }
