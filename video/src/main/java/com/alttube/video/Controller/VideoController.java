@@ -3,6 +3,8 @@ package com.alttube.video.Controller;
 import com.alttube.video.Models.Category;
 import com.alttube.video.Models.Video;
 import com.alttube.video.Repository.VideoRepository;
+import com.alttube.video.Services.VideoManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -16,9 +18,12 @@ import java.util.Set;
 public class VideoController {
 
     private final VideoRepository videoRepository;
+    private final VideoManager videoManager;
 
-    public VideoController(VideoRepository videoRepository) {
+    @Autowired
+    public VideoController(VideoRepository videoRepository, VideoManager videoManager) {
         this.videoRepository = videoRepository;
+        this.videoManager = videoManager;
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)
@@ -43,11 +48,14 @@ public class VideoController {
             method = RequestMethod.POST,
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void saveVideo(
-            @RequestHeader("token") String token,
-            HttpServletRequest request,
+//            @RequestHeader("token") String token,
+//            HttpServletRequest request,
             @Valid Video video,
             @RequestParam(name = "img")MultipartFile img,
             @RequestParam(name = "vid")MultipartFile vid) {
+
+        videoManager.saveImage(img, video);
+        videoManager.saveVideo(vid, video);
         videoRepository.save(video);
     }
 }

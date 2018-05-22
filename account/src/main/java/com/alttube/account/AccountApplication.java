@@ -13,6 +13,6 @@ public class AccountApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(AccountApplication.class, args);
-		new File(Paths.get("").toAbsolutePath().toString() + "/images").mkdir();
+		new File(Paths.get("").toAbsolutePath().toString() + "/account-images").mkdir();
 	}
 }

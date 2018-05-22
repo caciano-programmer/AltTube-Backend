@@ -1,0 +1,52 @@
+package com.alttube.video.Services;
+
+import com.alttube.video.Models.Video;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.UUID;
+
+@Service
+public class VideoManagerImpl implements VideoManager {
+
+    private final String imgPath = Paths.get("").toAbsolutePath().toString() + "/video-images";
+    private final String vidPath = Paths.get("").toAbsolutePath().toString() + "/video-videos";
+
+    @Override
+    public void saveImage(MultipartFile multipartFile, Video video) {
+        String uniqueFileName = UUID.randomUUID() + multipartFile.getOriginalFilename();
+        File file = new File(imgPath, uniqueFileName);
+
+        try {
+            file.createNewFile();
+            multipartFile.transferTo(file);
+            if(ImageIO.read(file) == null || file.length() > (1000 * 500)) {
+                file.delete();
+//                throw new RuntimeException("invalid image!");
+            }
+            video.setImgRef(uniqueFileName);
+        } catch (IOException ex) { ex.printStackTrace(); }
+    }
+
+    @Override
+    public void saveVideo(MultipartFile multipartFile, Video video) {
+        String uniqueFileName = UUID.randomUUID() + multipartFile.getOriginalFilename();
+        File file = new File(vidPath, uniqueFileName);
+
+        try {
+            file.createNewFile();
+            multipartFile.transferTo(file);
+            String fileType = Files.probeContentType(file.toPath());
+            boolean isVideo = fileType.split("/").length > 0 && fileType.split("/")[0].equals("video");
+            if(fileType == null || !isVideo || file.length() > (1000000 * 1000)) {
+                file.delete();
+//                throw new RuntimeException("improper video format");
+            }
+        } catch (IOException ex) { ex.printStackTrace(); }
+    }
+}

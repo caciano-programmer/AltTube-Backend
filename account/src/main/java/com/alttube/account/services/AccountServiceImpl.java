@@ -11,11 +11,12 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 @Service
 public class AccountServiceImpl implements AccountService {
 
-    private final String path = Paths.get("").toAbsolutePath().toString() + "/images";
+    private final String path = Paths.get("").toAbsolutePath().toString() + "/account-images";
     private final AccountRepository accountRepository;
     private final SecurityService securityService;
     private final ExceptionService exceptionService;
@@ -51,7 +52,8 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void saveImage(MultipartFile multipartFile, AccountExtrasModel extrasModel) {
 
-        File file = new File(path, multipartFile.getOriginalFilename());
+        String uniqueFileName = UUID.randomUUID() + multipartFile.getOriginalFilename();
+        File file = new File(path, uniqueFileName);
 
         try {
             file.createNewFile();
@@ -60,7 +62,7 @@ public class AccountServiceImpl implements AccountService {
                 file.delete();
                 exceptionService.throwInvalidImage();
             }
-            extrasModel.setImageName(multipartFile.getOriginalFilename());
+            extrasModel.setImageName(uniqueFileName);
         } catch (IOException ex) { ex.printStackTrace(); }
     }
 }
