@@ -102,7 +102,10 @@ public class SecurityServiceImpl implements SecurityService {
             Map<String, Claim> claims = decodedJWT.getClaims();
             Claim claim = claims.get("email");
             jwtClaim = Optional.of(claim.asString());
-        } catch(UnsupportedEncodingException | JWTVerificationException x) { x.printStackTrace(); }
+        } catch(UnsupportedEncodingException | JWTVerificationException x) {
+            exceptionService.throwInvalidCredentialsFormatException();
+            x.printStackTrace();
+        }
 
         return jwtClaim;
     }

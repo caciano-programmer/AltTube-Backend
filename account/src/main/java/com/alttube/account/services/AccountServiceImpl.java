@@ -29,11 +29,16 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void login(String email, String pass) {
+    public String login(String email, String pass) {
         AccountModel account = accountRepository.findByEmail(email);
         if(account == null) exceptionService.throwEmailNonExistentException(email);
         boolean validPassword = securityService.passwordMatch(pass, account.getPassword());
-        if(!validPassword) exceptionService.throwInvalidPasswordException();
+
+        if(validPassword)
+            return account.getName();
+        else
+            exceptionService.throwInvalidPasswordException();
+        return null;
     }
 
     @Override

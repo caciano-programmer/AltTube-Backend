@@ -41,6 +41,7 @@ public class AccountModel {
         if(accountExtrasModel.getDescription() != null) this.accountExtras.setDescription(accountExtrasModel.getDescription());
         if(accountExtrasModel.getAge() != null) this.accountExtras.setAge(accountExtrasModel.getAge());
         if(accountExtrasModel.getGender() != null) this.accountExtras.setGender(accountExtrasModel.getGender());
+        if(accountExtrasModel.getImageName() != null) this.accountExtras.setImageName(accountExtrasModel.getImageName());
         return this;
     }
 }

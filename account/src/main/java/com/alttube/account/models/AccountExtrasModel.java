@@ -25,7 +25,7 @@ public class AccountExtrasModel {
 
     @Lob
     private String description;
-    private String gender;
+    private Character gender;
     private Integer age;
     private String imageName;
 }

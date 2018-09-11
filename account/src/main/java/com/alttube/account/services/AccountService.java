@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface AccountService {
 
-    void login(String email, String password);
+    String login(String email, String password);
 
     void update(AccountModel accountModel, AccountExtrasModel accountExtrasModel);
 

@@ -10,7 +10,7 @@ spring:
 Account:
   SecretKey: ThisIsASecretKeyValue
 server:
-  port: 8089
+  port: 8080
 
 ---
 spring:
