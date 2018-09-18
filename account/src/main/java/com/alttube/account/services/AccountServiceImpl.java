@@ -11,6 +11,7 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.UUID;
 
 @Service
@@ -29,16 +30,17 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public String login(String email, String pass) {
+    public HashMap<String, String> login(String email, String pass) {
+        HashMap<String, String> map = new HashMap<>();
         AccountModel account = accountRepository.findByEmail(email);
         if(account == null) exceptionService.throwEmailNonExistentException(email);
         boolean validPassword = securityService.passwordMatch(pass, account.getPassword());
+        if(validPassword) {
+            map.put("id", account.getAccount_ID().toString());
+            map.put("name", account.getName());
+        }
 
-        if(validPassword)
-            return account.getName();
-        else
-            exceptionService.throwInvalidPasswordException();
-        return null;
+        return validPassword ? map : null;
     }
 
     @Override
@@ -48,10 +50,10 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void create(AccountModel accountModel) {
+    public String create(AccountModel accountModel) {
         String encodedPass = securityService.hashPassword(accountModel.getPassword());
         accountModel.setPassword(encodedPass);
-        accountRepository.save(accountModel);
+        return accountRepository.save(accountModel).getAccount_ID().toString();
     }
 
     @Override
@@ -63,7 +65,7 @@ public class AccountServiceImpl implements AccountService {
         try {
             file.createNewFile();
             multipartFile.transferTo(file);
-            if(ImageIO.read(file) == null || file.length() > (1000 * 500)) {
+            if(ImageIO.read(file) == null || file.length() > (2000 * 1000)) {
                 file.delete();
                 exceptionService.throwInvalidImage();
             }

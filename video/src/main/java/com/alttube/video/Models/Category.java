@@ -5,8 +5,8 @@ public enum Category {
     SPORTS,
     MUSIC,
     OUTDOORS,
-    ENTERTAINMENT,
     ARTISTIC,
     ANIMATION,
-    MISCELLANEOUS
+    MISCELLANEOUS,
+    ENTERTAINMENT
 }

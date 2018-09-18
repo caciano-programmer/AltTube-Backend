@@ -25,9 +25,9 @@ public class VideoManagerImpl implements VideoManager {
         try {
             file.createNewFile();
             multipartFile.transferTo(file);
-            if(ImageIO.read(file) == null || file.length() > (1000 * 500)) {
+            if(ImageIO.read(file) == null || file.length() > (2000 * 1000)) {
                 file.delete();
-//                throw new RuntimeException("invalid image!");
+                throw new RuntimeException("Failed, image must be correct format and under 2MB!");
             }
             video.setImgRef(uniqueFileName);
         } catch (IOException ex) { ex.printStackTrace(); }
@@ -45,8 +45,9 @@ public class VideoManagerImpl implements VideoManager {
             boolean isVideo = fileType.split("/").length > 0 && fileType.split("/")[0].equals("video");
             if(fileType == null || !isVideo || file.length() > (1000000 * 1000)) {
                 file.delete();
-//                throw new RuntimeException("improper video format");
+                throw new RuntimeException("Failed, video must be correct format and under 1GB.");
             }
+            video.setVidRef(uniqueFileName);
         } catch (IOException ex) { ex.printStackTrace(); }
     }
 }

@@ -2,6 +2,7 @@ package com.alttube.account.controllers;
 
 import com.alttube.account.models.AccountExtrasModel;
 import com.alttube.account.models.AccountModel;
+import com.alttube.account.repositories.AccountRepository;
 import com.alttube.account.services.AccountService;
 import com.alttube.account.services.CookieService;
 import com.alttube.account.services.SecurityService;
@@ -29,12 +30,14 @@ public class AccountController {
     private final AccountService accountService;
     private final SecurityService securityService;
     private final CookieService cookieService;
+    private final AccountRepository repository;
 
     @Autowired
-    public AccountController(AccountService accountService, SecurityService securityService, CookieService cookieService) {
+    public AccountController(AccountService accountService, SecurityService securityService, CookieService cookieService, AccountRepository repository) {
         this.cookieService = cookieService;
         this.accountService = accountService;
         this.securityService = securityService;
+        this.repository = repository;
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)
@@ -45,11 +48,9 @@ public class AccountController {
         HashMap<String, String> loginInfo = securityService.getCredentialsFromHeader(credentials);
         String email = loginInfo.get("email");
         String password = loginInfo.get("password");
-        String name = accountService.login(email, password);
         addCookieAndToken(response, email);
-        HashMap<String, String> map = new HashMap<>();
+        HashMap<String, String> map = accountService.login(email, password);
         map.put("status", "successful");
-        map.put("name", name);
         return map;
     }
 
@@ -75,19 +76,20 @@ public class AccountController {
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)
-    @RequestMapping(value = "/account/profile",
+    @RequestMapping(value = "/account/profile/{id}",
     method = RequestMethod.GET)
-    public HashMap<String, Object> getAccount(@RequestHeader("token") String token, HttpServletRequest request) {
-        HashMap<String, String> map = cookieService.cookieValue(request.getCookies());
-        Optional<AccountModel> accountModel = securityService.authenticate(token, map.get("token"), map.get("jwt"));
-        AccountExtrasModel extras = accountModel.get().getAccountExtras();
-        if(extras == null) return null;
+    public HashMap<String, Object> getAccount(@PathVariable(value = "id") String id) {
+        AccountModel accountModel = repository.findById(Long.valueOf(id)).get();
+        AccountExtrasModel extras = accountModel.getAccountExtras();
 
         HashMap<String, Object> profile = new HashMap<>();
-        if(extras.getAge() != null) profile.put("age", extras.getAge().toString());
-        if(extras.getGender() != null) profile.put("gender", extras.getGender().toString());
-        if(extras.getDescription() != null) profile.put("description", extras.getDescription());
-        if(extras.getImageName() != null) profile.put("image", Base64.getEncoder().encode(setImage(extras)));
+        profile.put("name", accountModel.getName());
+        if(extras != null) {
+            if(extras.getAge() != null) profile.put("age", extras.getAge().toString());
+            if(extras.getGender() != null) profile.put("gender", extras.getGender().toString());
+            if(extras.getDescription() != null) profile.put("description", extras.getDescription());
+            if(extras.getImageName() != null) profile.put("image", Base64.getEncoder().encode(setImage(extras)));
+        }
         return profile;
     }
 
@@ -100,14 +102,14 @@ public class AccountController {
         HashMap<String, String> loginInfo = securityService.getCredentialsFromHeader(credentials);
         String email = loginInfo.get("email");
         String password = loginInfo.get("password");
-        String name = accountModel.getName();
         accountModel.setEmail(email);
         accountModel.setPassword(password);
-        accountService.create(accountModel);
+        String id = accountService.create(accountModel);
         addCookieAndToken(response, email);
         HashMap<String, String> map = new HashMap<>();
+        map.put("name", accountModel.getName());
         map.put("status", "successful");
-        map.put("name", name);
+        map.put("id", id);
         return map;
     }
 

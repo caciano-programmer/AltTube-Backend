@@ -6,6 +6,7 @@ import com.alttube.video.Repository.VideoRepository;
 import com.alttube.video.Services.VideoManager;
 import org.apache.activemq.command.ActiveMQTextMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jms.core.JmsTemplate;
@@ -14,8 +15,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.jms.JMSException;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.Set;
 
+@CrossOrigin(exposedHeaders = "token", allowCredentials = "true")
 @RestController
 public class VideoController {
 
@@ -31,38 +38,62 @@ public class VideoController {
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)
-    @GetMapping(value = "/video")
-    public Set<Video> getVideos (
-            @RequestParam(name = "category", required = false) Category category,
-            @RequestParam(name = "keywords", required = false) String... keywords) {
+    @GetMapping(value = "/video/category/{category}")
+    public Set<Video> getVideosByCategory(@PathVariable(value = "category") Category category) {
+        Set<Video> videos = videoRepository.findByCategory(category);
+        for(Video video : videos)
+            video.setImage(Base64.getEncoder().encode(setImage(video)));
 
-        if(category != null && keywords != null && keywords.length > 0) return videoRepository.findByCategoryOrKeywordsIn(category, keywords);
-        else if(keywords != null && keywords.length > 0) return videoRepository.findByKeywordsIn(keywords);
-        else return videoRepository.findByCategory(category);
+        return videos;
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)
-    @GetMapping(value = "/account/videos")
-    public Set<Video> getAccountVideos(String owner) {
-        return videoRepository.findByOwner(owner);
+    @GetMapping(value = "/video/keyword/{keyword}")
+    public Set<Video> getVideosByKeyword(@PathVariable(value = "keyword") String input) {
+        Set<Video> videos = videoRepository.findByTitle(input.toLowerCase());
+        for(Video video : videos)
+            video.setImage(Base64.getEncoder().encode(setImage(video)));
+
+        return videos;
+    }
+
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @GetMapping(value = "/account/videos/id/{id}")
+    public Set<Video> getAccountVideos(@PathVariable(value = "id") Long owner) {
+        Set<Video> videos = videoRepository.findByOwner(owner);
+        for(Video video : videos)
+            video.setImage(Base64.getEncoder().encode(setImage(video)));
+
+        return videos;
+    }
+
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @RequestMapping(value = "/video/stream/{stream}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
+    )
+    public FileSystemResource getVideoStream(@PathVariable(value = "stream") String path) {
+        return new FileSystemResource(Paths.get("").toAbsolutePath().toString() + "/video-videos/" + path);
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     @RequestMapping(value = "/video",
             method = RequestMethod.POST,
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void saveVideo(
+    public String saveVideo(
             @RequestHeader(name = "token", defaultValue = "Empty") String headerToken,
             @CookieValue(name = "jwt", defaultValue = "Empty") String jwt,
             @CookieValue(name = "token", defaultValue = "Empty") String cookieToken,
-            @Valid Video video,
-            @RequestParam(name = "img")MultipartFile img,
-            @RequestParam(name = "vid")MultipartFile vid) {
+            @Valid Video vid,
+            @RequestPart(required = false) MultipartFile thumbnail,
+            @RequestPart(required = false) MultipartFile video) {
 
         authenticateCredentials(headerToken, cookieToken, jwt);
-        videoManager.saveImage(img, video);
-        videoManager.saveVideo(vid, video);
-        videoRepository.save(video);
+        videoManager.saveImage(thumbnail, vid);
+        vid.setTitle(vid.getTitle().toLowerCase());
+        videoManager.saveVideo(video, vid);
+        videoRepository.save(vid);
+        return "{\"status\": \"successful\"}";
     }
 
     private void authenticateCredentials(String headerToken, String cookieToken, String jwt) {
@@ -74,5 +105,12 @@ public class VideoController {
                 throw new RuntimeException(msg.getText());
             }
         } catch (JMSException ex) { throw new RuntimeException("Server Error!, ApacheMQ failure, please contact administrator"); }
+    }
+
+    private byte[] setImage(Video video) {
+        Path path = Paths.get(Paths.get("").toAbsolutePath().toString() + "/video-images/" + video.getImgRef());
+        try {
+            return Files.readAllBytes(path);
+        } catch (IOException ex) {return null;}
     }
 }

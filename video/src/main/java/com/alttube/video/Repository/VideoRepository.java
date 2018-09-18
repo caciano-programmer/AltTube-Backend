@@ -8,8 +8,7 @@ import java.util.Set;
 
 public interface VideoRepository extends CrudRepository<Video, Long> {
 
-    Set<Video> findByOwner(String owner);
-    Set<Video> findByCategory(Category category);
-    Set<Video> findByKeywordsIn(String... keywords);
-    Set<Video> findByCategoryOrKeywordsIn(Category category, String... keywords);
+    Set<Video>  findByTitle(String title);
+    Set<Video>  findByOwner(Long owner);
+    Set<Video>  findByCategory(Category category);
 }

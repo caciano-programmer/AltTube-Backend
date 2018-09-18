@@ -1,19 +1,20 @@
 package com.alttube.video.Models;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
+@NoArgsConstructor
 @ToString
 @Setter
 @Getter
 @Entity
+@Table(name = "Video")
 public class Video {
 
     @Id
@@ -21,22 +22,26 @@ public class Video {
     private Long id;
 
     @NotNull
-    @Column(nullable = false, updatable = false, unique = true)
-    private String owner;
+    @Column(nullable = false, updatable = false)
+    private Long owner;
 
-    @NotNull
     @Column(nullable = false, updatable = false)
     private String vidRef;
 
-    @NotNull
     @Column(nullable = false, updatable = false)
     private String imgRef;
+
+    @NotNull
+    @Column(nullable = false, updatable = false)
+    private String name;
 
     @NotNull
     @Column(nullable = false)
     private String title;
 
     @Lob
+    @NotNull
+    @Column(nullable = false)
     private String description;
 
     @Column(nullable = false)
@@ -47,6 +52,6 @@ public class Video {
     @Column(nullable = false)
     private Category category;
 
-    @ElementCollection
-    private Set<String> keywords = new HashSet<>();
+    @Transient
+    private byte[] image;
 }
