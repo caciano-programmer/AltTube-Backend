@@ -23,7 +23,6 @@ public class AccountExtrasModel {
     @MapsId
     private AccountModel accountModel;
 
-    @Lob
     private String description;
     private Character gender;
     private Integer age;

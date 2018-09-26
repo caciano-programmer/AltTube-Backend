@@ -29,7 +29,7 @@ public class Comment {
     private String text;
 
     @NotNull
-    private String videoRef;
+    private Long videoID;
 
     private final List<Reply> replies = new ArrayList<>();
 

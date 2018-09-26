@@ -6,5 +6,5 @@ import reactor.core.publisher.Flux;
 
 public interface CommentRepository extends ReactiveMongoRepository<Comment, String> {
 
-    Flux<Comment> findTop15ByVideoRefOrderByTimestamp(String videoRef);
+    Flux<Comment> findTop15ByVideoIDOrderByTimestamp(Long id);
 }

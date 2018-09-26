@@ -25,5 +25,6 @@ public class Reply {
     @NotNull
     private String text;
 
+    @NotNull
     private final Date timestamp = new Date();
 }

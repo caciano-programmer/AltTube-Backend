@@ -39,7 +39,6 @@ public class Video {
     @Column(nullable = false)
     private String title;
 
-    @Lob
     @NotNull
     @Column(nullable = false)
     private String description;

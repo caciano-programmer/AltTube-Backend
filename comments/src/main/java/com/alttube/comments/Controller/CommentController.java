@@ -16,6 +16,7 @@ import javax.jms.JMSException;
 import javax.validation.Valid;
 
 @RestController
+@CrossOrigin(exposedHeaders = "token", allowCredentials = "true")
 public class CommentController {
 
     private final CommentRepository commentRepository;
@@ -31,29 +32,29 @@ public class CommentController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/video/comment")
-     public Mono<Void> postComment(@Valid Mono<Comment> comment,
+    public Mono<Comment> postComment(@Valid @RequestBody Comment comment,
                                   @RequestHeader(name = "token", defaultValue = "Empty") String headerToken,
                                   @CookieValue(name = "jwt", defaultValue = "Empty") String jwt,
                                   @CookieValue(name = "token", defaultValue = "Empty") String cookieToken) {
 
-        authenticateCredentials(headerToken, cookieToken, jwt);
-        return commentRepository.insert(comment).then();
+//        authenticateCredentials(headerToken, cookieToken, jwt);
+        return commentRepository.insert(comment);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/video/reply")
-    public Mono<Void> postReply(@Valid Reply reply,
-                                @RequestHeader(name = "token", defaultValue = "Empty") String headerToken,
-                                @CookieValue(name = "jwt", defaultValue = "Empty") String jwt,
-                                @CookieValue(name = "token", defaultValue = "Empty") String cookieToken) {
-        authenticateCredentials(headerToken, cookieToken, jwt);
-        return advancedQuery.addReply(reply.getCommentRef(), reply).then();
+    public Mono<Reply> postReply(@Valid @RequestBody Reply reply,
+                                        @RequestHeader(name = "token", defaultValue = "Empty") String headerToken,
+                                        @CookieValue(name = "jwt", defaultValue = "Empty") String jwt,
+                                        @CookieValue(name = "token", defaultValue = "Empty") String cookieToken) {
+//        authenticateCredentials(headerToken, cookieToken, jwt);
+        return advancedQuery.addReply(reply.getCommentRef(), reply).thenReturn(reply);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @GetMapping(value = "/video/comment/{id}")
-    public Flux<Comment> getComments(@PathVariable String id) {
-        return commentRepository.findTop15ByVideoRefOrderByTimestamp(id);
+    @GetMapping(value = "/video/comment/id/{id}")
+    public Flux<Comment> getComments(@PathVariable Long id) {
+        return commentRepository.findTop15ByVideoIDOrderByTimestamp(id);
     }
 
     private void authenticateCredentials(String headerToken, String cookieToken, String jwt) {

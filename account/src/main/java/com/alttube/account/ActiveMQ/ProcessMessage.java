@@ -13,32 +13,32 @@ import javax.validation.Valid;
 @Component
 public class ProcessMessage {
 
-    private final String Authenticated = "Authenticated";
-    private final String NotAuthenticated = "Authentication failed, please log in.";
-
-    private final SecurityService securityService;
-
-    @Autowired
-    public ProcessMessage(SecurityService securityService) {
-        this.securityService = securityService;
-    }
-
-    @JmsListener(destination = "CommentAuthentication")
-    @SendTo("Comment")
-    public String CommentAuthenticate(@Payload @Valid final TextMessage message) {
-        return isAuthenticated(message) ? Authenticated : NotAuthenticated;
-    }
-
-    @JmsListener(destination = "VideoAuthentication")
-    @SendTo("Video")
-    public String VideoAuthenticate(@Payload @Valid final TextMessage message) {
-        return isAuthenticated(message) ? Authenticated : NotAuthenticated;
-    }
-
-    private boolean isAuthenticated(TextMessage message) {
-        try {
-            String[] credentials = message.getText().split(" ");
-            return securityService.isAuthenticated(credentials[0], credentials[1], credentials[2]);
-        } catch (Exception ex) { return false; }
-    }
+//    private final String Authenticated = "Authenticated";
+//    private final String NotAuthenticated = "Authentication failed, please log in.";
+//
+//    private final SecurityService securityService;
+//
+//    @Autowired
+//    public ProcessMessage(SecurityService securityService) {
+//        this.securityService = securityService;
+//    }
+//
+//    @JmsListener(destination = "CommentAuthentication")
+//    @SendTo("Comment")
+//    public String CommentAuthenticate(@Payload @Valid final TextMessage message) {
+//        return isAuthenticated(message) ? Authenticated : NotAuthenticated;
+//    }
+//
+//    @JmsListener(destination = "VideoAuthentication")
+//    @SendTo("Video")
+//    public String VideoAuthenticate(@Payload @Valid final TextMessage message) {
+//        return isAuthenticated(message) ? Authenticated : NotAuthenticated;
+//    }
+//
+//    private boolean isAuthenticated(TextMessage message) {
+//        try {
+//            String[] credentials = message.getText().split(" ");
+//            return securityService.isAuthenticated(credentials[0], credentials[1], credentials[2]);
+//        } catch (Exception ex) { return false; }
+//    }
 }
