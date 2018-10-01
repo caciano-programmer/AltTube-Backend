@@ -37,7 +37,7 @@ public class CommentController {
                                   @CookieValue(name = "jwt", defaultValue = "Empty") String jwt,
                                   @CookieValue(name = "token", defaultValue = "Empty") String cookieToken) {
 
-//        authenticateCredentials(headerToken, cookieToken, jwt);
+        authenticateCredentials(headerToken, cookieToken, jwt);
         return commentRepository.insert(comment);
     }
 
@@ -47,7 +47,7 @@ public class CommentController {
                                         @RequestHeader(name = "token", defaultValue = "Empty") String headerToken,
                                         @CookieValue(name = "jwt", defaultValue = "Empty") String jwt,
                                         @CookieValue(name = "token", defaultValue = "Empty") String cookieToken) {
-//        authenticateCredentials(headerToken, cookieToken, jwt);
+        authenticateCredentials(headerToken, cookieToken, jwt);
         return advancedQuery.addReply(reply.getCommentRef(), reply).thenReturn(reply);
     }
 

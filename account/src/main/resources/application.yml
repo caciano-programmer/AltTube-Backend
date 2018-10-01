@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: prod
   jpa:
     database: mysql
   activemq:
@@ -25,4 +25,10 @@ spring:
   profiles: prod
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
+    show-sql: true
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/Account
+    username: root
+    password: password
+    driver-class-name: com.mysql.jdbc.Driver

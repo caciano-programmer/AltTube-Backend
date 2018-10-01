@@ -88,7 +88,7 @@ public class VideoController {
             @RequestPart(required = false) MultipartFile thumbnail,
             @RequestPart(required = false) MultipartFile video) {
 
-//        authenticateCredentials(headerToken, cookieToken, jwt);
+        authenticateCredentials(headerToken, cookieToken, jwt);
         videoManager.saveImage(thumbnail, vid);
         vid.setTitle(vid.getTitle().toLowerCase());
         videoManager.saveVideo(video, vid);
