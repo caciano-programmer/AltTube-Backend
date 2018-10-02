@@ -1,12 +1,6 @@
 spring:
-  profiles:
-    active: prod
   jpa:
     database: mysql
-  activemq:
-      broker-url: tcp://localhost:61616
-      user: admin
-      password: admin
 Account:
   SecretKey: ThisIsASecretKeyValue
 server:
@@ -15,6 +9,10 @@ server:
 ---
 spring:
   profiles: dev
+  activemq:
+    broker-url: tcp://localhost:61616
+    user: admin
+    password: admin
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -23,12 +21,19 @@ spring:
 ---
 spring:
   profiles: prod
+  activemq:
+    broker-url: tcp://${BROKER_HOST}:61616
+    user: admin
+    password: admin
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/Account
+    url: jdbc:mysql://${DATABASE_HOST}:3306/Account
     username: root
     password: password
     driver-class-name: com.mysql.jdbc.Driver
+    hikari:
+      connection-timeout: 100000
+      initialization-fail-timeout: 0
