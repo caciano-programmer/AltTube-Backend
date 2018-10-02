@@ -1,6 +1,7 @@
 package com.alttube.video.Services;
 
 import com.alttube.video.Models.Video;
+import org.apache.tika.Tika;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,13 +42,22 @@ public class VideoManagerImpl implements VideoManager {
         try {
             file.createNewFile();
             multipartFile.transferTo(file);
-            String fileType = Files.probeContentType(file.toPath());
-            boolean isVideo = fileType.split("/").length > 0 && fileType.split("/")[0].equals("video");
-            if(fileType == null || !isVideo || file.length() > (1000000 * 1000)) {
+            if(!validVideo(file)) {
                 file.delete();
-                throw new RuntimeException("Failed, video must be correct format and under 1GB.");
+                throw new RuntimeException("Failed, video must be correct format(mp4, webm, ogg) and under 1GB.");
             }
             video.setVidRef(uniqueFileName);
         } catch (IOException ex) { ex.printStackTrace(); }
+    }
+
+    private boolean validVideo(File file) throws IOException {
+        Tika tika = new Tika();
+        String filetype = tika.detect(file);
+        String type = filetype.split("/")[0];
+        String ext = filetype.split("/")[1];
+        if(!type.equals("video") && !ext.equals("webm") && !ext.equals("mp4") && !ext.equals("ogg") && file.length() > (1000000 * 1000))
+            return false;
+
+        return true;
     }
 }

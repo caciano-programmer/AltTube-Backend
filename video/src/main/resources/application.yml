@@ -1,12 +1,6 @@
 spring:
-  profiles:
-    active: dev
   jpa:
     database: mysql
-  activemq:
-      broker-url: tcp://localhost:61616
-      user: admin
-      password: admin
   servlet:
     multipart:
       max-file-size: 1000MB
@@ -16,6 +10,10 @@ server:
 ---
 spring:
   profiles: dev
+  activemq:
+    broker-url: tcp://localhost:61616
+    user: admin
+    password: admin
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -24,6 +22,18 @@ spring:
 ---
 spring:
   profiles: prod
+  activemq:
+    broker-url: tcp://${BROKER_HOST}:61616
+    user: admin
+    password: admin
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
+  datasource:
+    url: jdbc:mysql://${DATABASE_HOST}:3306/Video
+    username: root
+    password: password
+    driver-class-name: com.mysql.jdbc.Driver
+    hikari:
+      connection-timeout: 200000
+      initialization-fail-timeout: 0
