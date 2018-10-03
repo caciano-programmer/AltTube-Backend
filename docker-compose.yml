@@ -63,3 +63,10 @@ services:
       - "account-service"
       - "mongodb"
       - "video-service"
+
+  chat-service:
+    build: ./chat
+    ports: 
+      - "8083:8083"
+    depends_on:
+      - "video-service"
