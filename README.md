@@ -19,4 +19,17 @@ This app is built into 4 microservices: Account, Video, Comments, Chat.
   Chat: Lastly this is a lightweight microservice running websockets to implement a live chat feature for videos.
 
 # How To Run
+ To run this application you will need to have docker installed. For more on that go here: https://www.docker.com/get-started  
+ Since this is a multi-module application we will also need docker-compose to run each module and database server in its own container. For
+ more on that go here: https://docs.docker.com/compose/  
+ 
+ Once docker and docker-compose are both installed running this application is extremely simple. First clone this repository and from command 
+ line CD inside of application root directory. Then simply execute the following command which will be called on the docker-compose.yml file:  
+ 
+  docker-compose up  
   
+ And voila, docker will begin to load the dependencies and execute commands. Please give it a couple minutes to load all the containers 
+ containing microservices and database servers etc. Remember this is just the backend, to view and interact with this application please visit 
+ this repo to run the frontend portion:  
+ https://github.com/caciano-programmer/AltTube-Frontend.git
+ 
