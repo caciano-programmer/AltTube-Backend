@@ -1,7 +1,9 @@
-target/
-!account/target/account-0.0.1-SNAPSHOT.jar
-!video/target/video-0.0.1-SNAPSHOT.jar
-!comments/target/comments-0.0.1-SNAPSHOT.jar
+*/target/*
+
+!account-0.0.1-SNAPSHOT.jar
+!video-0.0.1-SNAPSHOT.jar
+!comments-0.0.1-SNAPSHOT.jar
+!chat-0.0.1-SNAPSHOT.jar
 !.mvn/wrapper/maven-wrapper.jar
 
 ### IntelliJ IDEA ###
