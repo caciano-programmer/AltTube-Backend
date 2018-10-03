@@ -26,10 +26,9 @@ This app is built into 4 microservices: Account, Video, Comments, Chat.
  Once docker and docker-compose are both installed running this application is extremely simple. First clone this repository and from command 
  line CD inside of application root directory. Then simply execute the following command which will be called on the docker-compose.yml file:  
  
-  docker-compose up  
+  `docker-compose up`  
   
  And voila, docker will begin to load the dependencies and execute commands. Please give it a couple minutes to load all the containers 
  containing microservices and database servers etc. Remember this is just the backend, to view and interact with this application please visit 
- this repo to run the frontend portion:  
- https://github.com/caciano-programmer/AltTube-Frontend.git
+ this repo to run the frontend portion: https://github.com/caciano-programmer/AltTube-Frontend.git
  
