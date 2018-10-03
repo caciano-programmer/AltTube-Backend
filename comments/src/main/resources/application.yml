@@ -1,12 +1,30 @@
+server:
+  port: 8082
+
+---
+
 spring:
   data:
     mongodb:
       port: 27017
-      host: localhost
+      host: ${DATABASE_HOST}
       database: Comments
   activemq:
-    broker-url: tcp://localhost:61616
+    broker-url: tcp://${BROKER_HOST}:61616
     user: admin
     password: admin
-server:
-  port: 8082
+  profiles: prod
+
+---
+
+spring:
+  profiles: dev
+  data:
+    mongodb:
+      database: Comments
+      port: 27017
+      host: 127.0.0.1
+  activemq:
+    broker-url: tcp://127.0.0.1:61616
+    user: admin
+    password: admin
