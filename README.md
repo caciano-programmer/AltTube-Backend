@@ -3,7 +3,8 @@ Backend microservices for video sharing application. Sort of like a bare bones v
 create and edit your account so other users can know more about you, leave comments on videos, etc. 
 Also each video has a live chat feature built on web sockets that allows communication in real time.  
 
-This is the backend portion of this app, to view/run the frontend visit this repo: https://github.com/caciano-programmer/AltTube-Frontend.git
+This is the backend portion of this app, to view/run the frontend visit this repo:  
+https://github.com/caciano-programmer/AltTube-Frontend.git
 
 This app is built into 4 microservices: Account, Video, Comments, Chat. 
 
@@ -13,7 +14,8 @@ This app is built into 4 microservices: Account, Video, Comments, Chat.
   Video: This microservice handles video uploads. Videos are checked for validation(file type & size constraints) and then through a 
   message broker(Activemq) cookies are sent to Account for authentication.  
   
-  Comments: This microservice handles comments crud operations and communicates with a nosql database(Mongodb) to store comments and replies.
+  Comments: This microservice handles comments crud operations and communicates with a nosql database(Mongodb) to store comments and replies.  
+  
   Chat: Lastly this is a lightweight microservice running websockets to implement a live chat feature for videos.
 
 # How To Run
