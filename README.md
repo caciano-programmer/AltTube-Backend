@@ -4,7 +4,7 @@ create and edit your account so other users can know more about you, leave comme
 Also each video has a live chat feature built on web sockets that allows communication in real time.  
 
 This is the backend portion of this app, to view/run the frontend visit this repo:  
-https://github.com/caciano-programmer/AltTube-Frontend.git
+https://github.com/caciano-programmer/AltTube-Frontend
 
 This app is built into 4 microservices: Account, Video, Comments, Chat. 
 
@@ -30,5 +30,5 @@ This app is built into 4 microservices: Account, Video, Comments, Chat.
   
  And voila, docker will begin to load the dependencies and execute commands. Please give it a couple minutes to load all the containers 
  containing microservices and database servers etc. Remember this is just the backend, to view and interact with this application please visit 
- this repo to run the frontend portion: https://github.com/caciano-programmer/AltTube-Frontend.git
+ this repo to run the frontend portion: https://github.com/caciano-programmer/AltTube-Frontend  
  
